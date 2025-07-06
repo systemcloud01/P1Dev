@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCA Online Banking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #0066cc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            grid-column: 1 / -1;
+        }
+
+        .balance-amount {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .account-number {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .balance-card .card-title {
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,102,204,0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .transaction-history {
+            grid-column: 1 / -1;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        .transaction-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-type {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .transaction-date {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .transaction-amount {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .transaction-amount.credit {
+            color: #28a745;
+        }
+
+        .transaction-amount.debit {
+            color: #dc3545;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .icon {
+            font-size: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .balance-amount {
+                font-size: 36px;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🏦 BCA Online Banking</div>
+            <div class="user-info">
+                <div class="user-avatar">JD</div>
+                <div>
+                    <div style="font-weight: bold;">John Doe</div>
+                    <div style="color: #666; font-size: 14px;">Selamat datang kembali</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="card balance-card">
+                <div class="card-title">
+                    <span class="icon">💳</span>
+                    Saldo Rekening
+                </div>
+                <div class="account-number">Rekening: 1234567890</div>
+                <div class="balance-amount" id="balance">Rp 25.750.000</div>
+                <div>Tabungan BCA</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon">💸</span>
+                    Transfer Dana
+                </div>
+                <div id="alertContainer"></div>
+                <form id="transferForm">
+                    <div class="form-group">
+                        <label for="transferType">Jenis Transfer</label>
+                        <select id="transferType" required>
+                            <option value="">Pilih jenis transfer</option>
+                            <option value="bca">Antar Rekening BCA</option>
+                            <option value="bank">Antar Bank</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="accountNumber">Nomor Rekening Tujuan</label>
+                        <input type="text" id="accountNumber" placeholder="Masukkan nomor rekening" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="accountName">Nama Penerima</label>
+                        <input type="text" id="accountName" placeholder="Nama akan terisi otomatis" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Jumlah Transfer</label>
+                        <input type="number" id="amount" placeholder="Masukkan jumlah" min="10000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="note">Catatan (Opsional)</label>
+                        <input type="text" id="note" placeholder="Catatan transfer">
+                    </div>
+                    <button type="submit" class="btn">Transfer Sekarang</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon">📊</span>
+                    Cek Saldo
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 18px; margin-bottom: 10px;">Saldo Saat Ini</div>
+                    <div style="font-size: 36px; font-weight: bold; color: #0066cc;" id="currentBalance">Rp 25.750.000</div>
+                    <div style="color: #666; margin-top: 10px;">Terakhir diperbarui: <span id="lastUpdate"></span></div>
+                </div>
+                <button onclick="updateBalance()" class="btn">Refresh Saldo</button>
+            </div>
+
+            <div class="card transaction-history">
+                <div class="card-title">
+                    <span class="icon">📋</span>
+                    Riwayat Transaksi
+                </div>
+                <div id="transactionList">
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-type">Transfer Masuk</div>
+                            <div class="transaction-date">2025-07-06 14:30</div>
+                        </div>
+                        <div class="transaction-amount credit">+Rp 500.000</div>
+                    </div>
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-type">Transfer Keluar</div>
+                            <div class="transaction-date">2025-07-06 10:15</div>
+                        </div>
+                        <div class="transaction-amount debit">-Rp 250.000</div>
+                    </div>
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-type">Tarik Tunai ATM</div>
+                            <div class="transaction-date">2025-07-05 19:45</div>
+                        </div>
+                        <div class="transaction-amount debit">-Rp 1.000.000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentBalance = 25750000;
+        const accountDatabase = {
+            '9876543210': 'Jane Smith',
+            '1111222233': 'Ahmad Rahman',
+            '5555666677': 'Siti Nurhaliza',
+            '9999888877': 'Budi Santoso'
+        };
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function updateBalance() {
+            const balanceElement = document.getElementById('balance');
+            const currentBalanceElement = document.getElementById('currentBalance');
+            const lastUpdateElement = document.getElementById('lastUpdate');
+            
+            const formattedBalance = formatCurrency(currentBalance);
+            balanceElement.textContent = formattedBalance;
+            currentBalanceElement.textContent = formattedBalance;
+            
+            const now = new Date();
+            lastUpdateElement.textContent = now.toLocaleString('id-ID');
+        }
+
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            
+            alertContainer.innerHTML = `
+                <div class="alert ${alertClass}">
+                    ${message}
+                </div>
+            `;
+            
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        function addTransaction(type, amount, note = '') {
+            const transactionList = document.getElementById('transactionList');
+            const now = new Date();
+            const dateString = now.toLocaleString('id-ID');
+            
+            const transactionItem = document.createElement('div');
+            transactionItem.className = 'transaction-item';
+            
+            const amountClass = amount > 0 ? 'credit' : 'debit';
+            const amountText = amount > 0 ? `+${formatCurrency(amount)}` : formatCurrency(amount);
+            
+            transactionItem.innerHTML = `
+                <div class="transaction-info">
+                    <div class="transaction-type">${type}</div>
+                    <div class="transaction-date">${dateString}</div>
+                </div>
+                <div class="transaction-amount ${amountClass}">${amountText}</div>
+            `;
+            
+            transactionList.insertBefore(transactionItem, transactionList.firstChild);
+        }
+
+        document.getElementById('accountNumber').addEventListener('input', function() {
+            const accountNumber = this.value;
+            const accountNameField = document.getElementById('accountName');
+            
+            if (accountDatabase[accountNumber]) {
+                accountNameField.value = accountDatabase[accountNumber];
+            } else {
+                accountNameField.value = '';
+            }
+        });
+
+        document.getElementById('transferForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const transferType = document.getElementById('transferType').value;
+            const accountNumber = document.getElementById('accountNumber').value;
+            const accountName = document.getElementById('accountName').value;
+            const amount = parseInt(document.getElementById('amount').value);
+            const note = document.getElementById('note').value;
+            
+            if (!transferType || !accountNumber || !accountName || !amount) {
+                showAlert('Mohon lengkapi semua field yang diperlukan!', 'error');
+                return;
+            }
+            
+            if (amount < 10000) {
+                showAlert('Jumlah transfer minimal Rp 10.000', 'error');
+                return;
+            }
+            
+            if (amount > currentBalance) {
+                showAlert('Saldo tidak mencukupi untuk transfer ini!', 'error');
+                return;
+            }
+            
+            // Simulasi proses transfer
+            setTimeout(() => {
+                currentBalance -= amount;
+                updateBalance();
+                
+                const transferTypeName = transferType === 'bca' ? 'Transfer BCA' : 'Transfer Antar Bank';
+                addTransaction(`${transferTypeName} ke ${accountName}`, -amount, note);
+                
+                showAlert(`Transfer berhasil! Rp ${amount.toLocaleString('id-ID')} telah dikirim ke ${accountName}`, 'success');
+                
+                // Reset form
+                this.reset();
+                document.getElementById('accountName').value = '';
+            }, 1000);
+        });
+
+        // Initialize
+        updateBalance();
+    </script>
+</body>
+</html>
